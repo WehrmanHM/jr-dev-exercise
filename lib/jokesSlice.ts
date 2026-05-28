@@ -81,14 +81,20 @@ const jokesSlice = createSlice({
       .addCase(fetchJoke.pending, (state) => {
         //TODO: Set loading to true
         //TODO: Set error to null
+        state.loading = true;
+        state.error = null;
       })
       .addCase(fetchJoke.fulfilled, (state, action) => {
         //TODO: Set loading to false
         //TODO: Set currentJoke to the action payload
+        state.loading = false;
+        state.currentJoke = action.payload;
       })
       .addCase(fetchJoke.rejected, (state, action) => {
         //TODO: Set loading to false
         //TODO: Set error to the action payload or "Failed to fetch joke"
+        state.loading = false;
+        state.error = action.payload || "Failed to fetch joke";
       });
   },
 });
