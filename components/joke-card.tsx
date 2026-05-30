@@ -41,6 +41,7 @@ export default function JokeCard() {
 
   // TODO: Get the joke from Redux state using useSelector
   // this is a placeholder for the joke
+  
   const joke: RatedJoke = {
     rating: 0,
     error: false,
