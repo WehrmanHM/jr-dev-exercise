@@ -8,19 +8,21 @@ import { Badge } from "@/components/ui/badge";
 import { Trophy, Medal, Award, Trash2 } from "lucide-react";
 import StarRating from "./star-rating";
 
-import { useDispatch } from "react-redux";
-import { AppDispatch } from "@/lib/store";
+import { useDispatch, useSelector } from "react-redux";
+import { AppDispatch, RootState } from "@/lib/store";
 import { RatedJoke } from "@/lib/utils";
+import { clearRatedJokes } from "@/lib/jokesSlice";
 
 export default function Leaderboard() {
   const dispatch = useDispatch<AppDispatch>();
 
   const handleClearAll = () => {
     //TODO: Dispatch clearRatedJokes
+    dispatch(clearRatedJokes());
   };
 
   // TODO: Get ratedJokes from Redux state using useSelector
-  const jokes: RatedJoke[] = [];
+  const jokes: RatedJoke[] = useSelector((state: RootState) => state.jokes.ratedJokes);
   const getRankIcon = (index: number) => {
     switch (index) {
       case 0:

@@ -3,62 +3,49 @@ import { Badge } from "@/components/ui/badge";
 import { AlertTriangle, Shield } from "lucide-react";
 import StarRating from "./star-rating";
 import { RatedJoke } from "@/lib/utils";
+import { AppDispatch, RootState } from "@/lib/store";
+import { rateJoke } from "@/lib/jokesSlice";
+import { useDispatch, useSelector } from "react-redux";
 
-interface JokeResponse {
-  error: boolean;
-  category: string;
-  type: string;
-  setup?: string;
-  delivery?: string;
-  joke?: string;
-  flags: {
-    nsfw: boolean;
-    religious: boolean;
-    political: boolean;
-    racist: boolean;
-    sexist: boolean;
-    explicit: boolean;
-  };
-  id: number;
-  safe: boolean;
-  lang: string;
-}
+// interface JokeCardProps {
+//   joke: JokeResponse;
+//   onRate?: (rating: number) => void;
+//   currentRating?: number;
+// }
 
-interface JokeCardProps {
-  joke: JokeResponse;
-  onRate?: (rating: number) => void;
-  currentRating?: number;
-}
-
-export default function JokeCard() {
+export default function JokeCard()  {
   // TODO: Get the dispatch function using useDispatch<AppDispatch>()
-  // const dispatch = ...
+  const dispatch = useDispatch<AppDispatch>();
+  const joke = useSelector((state: RootState) => state.jokes.currentJoke) as RatedJoke;
+  const ratedJokes = useSelector((state: RootState) => state.jokes.ratedJokes);
+  const currentRating = ratedJokes.find(j => j.id === joke.id)?.rating || 0;
 
-  const handleRate = (rating: number) => {
+
+  const handleRateJoke = (rating: number) => {
     // TODO: Dispatch rateJoke with the rating
-    // dispatch(rateJoke({ joke, rating }))
+    dispatch(rateJoke({ joke, rating }))
   };
 
   // TODO: Get the joke from Redux state using useSelector
   // this is a placeholder for the joke
-  
-  const joke: RatedJoke = {
-    rating: 0,
-    error: false,
-    category: "",
-    type: "",
-    id: 0,
-    flags: {
-      nsfw: false,
-      religious: false,
-      political: false,
-      racist: false,
-      sexist: false,
-      explicit: false,
-    },
-    safe: false,
-    lang: "",
-  };
+
+  // const joke: RatedJoke = {
+  //   rating: 0,
+  //   error: false,
+  //   category: "",
+  //   type: "",
+  //   id: 0,
+  //   flags: {
+  //     nsfw: false,
+  //     religious: false,
+  //     political: false,
+  //     racist: false,
+  //     sexist: false,
+  //     explicit: false,
+  //   },
+  //   safe: false,
+  //   lang: "",
+  // };
 
   const getActiveFlags = () => {
     return Object.entries(joke?.flags || {})
@@ -115,11 +102,11 @@ export default function JokeCard() {
             <p className="text-sm font-medium text-gray-600 mb-2">
               Rate this joke:
             </p>
-            <StarRating rating={joke.rating || 0} onRate={handleRate} />
+            <StarRating rating={currentRating} onRate={handleRateJoke} />
           </div>
-          {joke.rating && (
+          {currentRating > 0 && (
             <Badge variant="secondary" className="text-xs">
-              You rated: {joke.rating}/5
+              You rated: {currentRating}/5
             </Badge>
           )}
         </div>

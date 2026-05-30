@@ -37,6 +37,9 @@ const jokesSlice = createSlice({
   name: "jokes",
   initialState,
   reducers: {
+
+    // action 1: rate a joke
+    
     rateJoke(
       state,
       action: PayloadAction<{ joke: JokeResponse; rating: number }>
@@ -60,6 +63,9 @@ const jokesSlice = createSlice({
         localStorage.setItem("ratedJokes", JSON.stringify(state.ratedJokes));
       }
     },
+
+    // action 2: load rated jokes from local storage
+
     loadRatedJokes(state) {
       if (typeof window !== "undefined") {
         const stored = localStorage.getItem("ratedJokes");
@@ -69,6 +75,9 @@ const jokesSlice = createSlice({
         }
       }
     },
+
+    // action 3: clear rated jokes
+
     clearRatedJokes(state) {
       state.ratedJokes = [];
       if (typeof window !== "undefined") {
@@ -76,20 +85,25 @@ const jokesSlice = createSlice({
       }
     },
   },
+
+  // async stuff for loading state and error handling
   extraReducers: (builder) => {
     builder
+      // joke is loading
       .addCase(fetchJoke.pending, (state) => {
         //TODO: Set loading to true
         //TODO: Set error to null
         state.loading = true;
         state.error = null;
       })
+      // joke has been retrieved
       .addCase(fetchJoke.fulfilled, (state, action) => {
         //TODO: Set loading to false
         //TODO: Set currentJoke to the action payload
         state.loading = false;
         state.currentJoke = action.payload;
       })
+      // joke retrieval failed
       .addCase(fetchJoke.rejected, (state, action) => {
         //TODO: Set loading to false
         //TODO: Set error to the action payload or "Failed to fetch joke"

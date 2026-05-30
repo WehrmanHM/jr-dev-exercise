@@ -1,10 +1,10 @@
 "use client";
 
 // TODO: Import necessary hooks and functions from Redux
-import { useState } from "react";
-import {} from "react-redux";
-import {} from "@/lib/store";
-import {} from "@/lib/jokesSlice";
+import { useState, useEffect } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { AppDispatch, RootState } from "@/lib/store";
+import { fetchJoke, rateJoke, loadRatedJokes, clearRatedJokes } from "@/lib/jokesSlice";
 import { Button } from "@/components/ui/button";
 import {
   Select,
@@ -34,21 +34,27 @@ export default function JokesApp() {
   );
 
   // TODO: Get the dispatch function using useDispatch<AppDispatch>()
-  // const dispatch = ...
+  const dispatch = useDispatch<AppDispatch>();
 
   // TODO: Get jokes state from Redux using useSelector
-  // const { currentJoke, loading, error, ratedJokes } = ...
+  const { currentJoke, loading, error, ratedJokes } = useSelector((state: RootState) => state.jokes);
 
   // TODO: On mount, dispatch loadRatedJokes
-  // useEffect(() => {
-  //   dispatch(loadRatedJokes());
-  // }, [dispatch]);
+  useEffect(() => {
+    dispatch(loadRatedJokes());
+  }, [dispatch]);
 
   // TODO: Implement handleRateJoke to dispatch rateJoke
-  // const handleRateJoke = (rating: number) => { ... }
+  const handleRateJoke = (rating: number) => {
+    if (currentJoke) {
+      dispatch(rateJoke({joke: currentJoke, rating}));
+    }
+  };
 
   // TODO: Implement handleFetchJoke to dispatch fetchJoke
-  // const handleFetchJoke = () => { ... }
+  const handleFetchJoke = () => {
+    dispatch(fetchJoke(selectedCategory));
+   }
 
   return (
     <div className="max-w-2xl mx-auto space-y-6">
@@ -67,7 +73,7 @@ export default function JokesApp() {
             onClick={() => setCurrentView("leaderboard")}
           >
             {/* TODO: Show the number of rated jokes from Redux state */}
-            Leaderboard (0)
+            Leaderboard ({ratedJokes.length})
           </Button>
         </div>
       </div>
@@ -105,26 +111,35 @@ export default function JokesApp() {
                 <div className="flex items-end">
                   <Button
                     // TODO: Call handleFetchJoke on click and disable when loading
-                    // onClick={handleFetchJoke}
-                    // disabled={loading}
+                    onClick={handleFetchJoke}
+                    disabled={loading}
                     className="w-full sm:w-auto"
                   >
-                    {/* TODO: Show loading spinner and text when loading -  <Loader2 className="mr-2 h-4 w-4 animate-spin" />*/}
+                  {/* TODO: Show loading spinner and text when loading -  <Loader2 className="mr-2 h-4 w-4 animate-spin" />*/}
+                  {loading ? (
+                    <>
+                      <Loader2 className="mr-2 h-4 w-4 animate-spin"/>
+                      Loading...
+                    </>
+                  ) : (
                     <>
                       <RefreshCw className="mr-2 h-4 w-4" />
                       Get Joke
                     </>
-                  </Button>
+                  )
+                  }
+                </Button>
                 </div>
               </div>
             </CardContent>
           </Card>
 
           {/* TODO: Show error message if error exists in Redux state */}
-
+          {error && <p className="text-red-500 text-center">{error}</p>}
           {/* TODO: Show JokeCard if currentJoke exists and not loading or error */}
-
+          {currentJoke && !loading && !error && <JokeCard />}
           {/* TODO: Show initial state if no currentJoke, not loading, and no error */}
+          {!currentJoke && !loading && !error && <p className="text-center">Click "Get Joke" for freecomedy</p>}
         </>
       ) : (
         <Leaderboard />
