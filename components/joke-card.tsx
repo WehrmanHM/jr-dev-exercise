@@ -16,9 +16,9 @@ import { useDispatch, useSelector } from "react-redux";
 export default function JokeCard()  {
   // TODO: Get the dispatch function using useDispatch<AppDispatch>()
   const dispatch = useDispatch<AppDispatch>();
-  const joke = useSelector((state: RootState) => state.jokes.currentJoke) as RatedJoke;
-  const ratedJokes = useSelector((state: RootState) => state.jokes.ratedJokes);
-  const currentRating = ratedJokes.find(j => j.id === joke.id)?.rating || 0;
+  const joke: RatedJoke = useSelector((state: RootState) => state.jokes.currentJoke) as RatedJoke;
+  const ratedJokes: RatedJoke[] = useSelector((state: RootState) => state.jokes.ratedJokes);
+  const currentRating: number = ratedJokes.find(j => j.id === joke.id)?.rating || 0;
 
 
   const handleRateJoke = (rating: number) => {

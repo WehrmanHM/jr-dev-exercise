@@ -4,7 +4,7 @@
 import { useState, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { AppDispatch, RootState } from "@/lib/store";
-import { fetchJoke, rateJoke, loadRatedJokes, clearRatedJokes } from "@/lib/jokesSlice";
+import { fetchJoke, loadRatedJokes, clearRatedJokes } from "@/lib/jokesSlice";
 import { Button } from "@/components/ui/button";
 import {
   Select,
@@ -44,12 +44,12 @@ export default function JokesApp() {
     dispatch(loadRatedJokes());
   }, [dispatch]);
 
-  // TODO: Implement handleRateJoke to dispatch rateJoke
-  const handleRateJoke = (rating: number) => {
-    if (currentJoke) {
-      dispatch(rateJoke({joke: currentJoke, rating}));
-    }
-  };
+  // // TODO: Implement handleRateJoke to dispatch rateJoke
+  // const handleRateJoke = (rating: number) => {
+  //   if (currentJoke) {
+  //     dispatch(rateJoke({joke: currentJoke, rating}));
+  //   }
+  // };
 
   // TODO: Implement handleFetchJoke to dispatch fetchJoke
   const handleFetchJoke = () => {
@@ -139,7 +139,7 @@ export default function JokesApp() {
           {/* TODO: Show JokeCard if currentJoke exists and not loading or error */}
           {currentJoke && !loading && !error && <JokeCard />}
           {/* TODO: Show initial state if no currentJoke, not loading, and no error */}
-          {!currentJoke && !loading && !error && <p className="text-center">Click "Get Joke" for freecomedy</p>}
+          {!currentJoke && !loading && !error && <p className="text-center">Click "Get Joke" for free jokes</p>}
         </>
       ) : (
         <Leaderboard />
